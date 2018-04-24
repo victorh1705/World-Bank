@@ -1,18 +1,32 @@
 leNumero <- function(texto) {
-
+    
     print(texto)
-    num <- readline("")
-    while( !is.na(num) | !is.numeric(num)) {
-        num <- readline(texto)
+    num <- as.numeric(readline())
+    while( is.na(num) | !is.numeric(num) | num < 0 ) {
+        print(texto)
+        num <- as.numeric(readline())
+    }
+    num
+}
+
+leDataAno <- function(texto) {
+    
+    print(texto)
+    num <- as.numeric(readline())
+    while( is.na(num) | (!is.numeric(num) & (num < 1959 | num > 2017 )) )  {
+        print(texto)
+        num <- as.numeric(readline())
     }
     num
 }
 
 leTexto <- function(texto) {
-
-    lido <- readline(texto)
-    while ( !is.na(texto) | !is.character(texto)) {
-        texto <- readline(texto)
+    
+    print(texto)
+    lido <- readline()
+    while (  !is.character(texto)) {
+        print(texto)
+        texto <- readline()
         break
     }
     texto

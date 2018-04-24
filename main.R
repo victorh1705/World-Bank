@@ -13,4 +13,10 @@ colunas <- c(1:4,dt_inicio:dt_final)
 campos <- grep("x", indicadores$ANALYSIS)
 campos_nomes <- indicadores[campos,1]
 
-menu(indicadores[campos,1:2])
+codigo_indicador <- menu(indicadores[campos,1:2])
+
+dt_analise <- leNumero("Digite o ano de análise: ")
+
+n_cluster <- leNumero("Digite a quantidade de clusteres: ")
+
+## Criar funções de clusterização
