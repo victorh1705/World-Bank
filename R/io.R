@@ -1,9 +1,9 @@
 leNumero <- function(texto) {
     
-    print(texto)
+    cat(texto)
     num <- as.numeric(readline())
     while( is.na(num) | !is.numeric(num) | num < 0 ) {
-        print(texto)
+        cat(texto)
         num <- as.numeric(readline())
     }
     num
@@ -11,23 +11,34 @@ leNumero <- function(texto) {
 
 leDataAno <- function(texto) {
     
-    print(texto)
-    num <- as.numeric(readline())
-    while( is.na(num) | (!is.numeric(num) & (num < 1959 | num > 2017 )) )  {
-        print(texto)
-        num <- as.numeric(readline())
+    num <- leNumero(texto)
+    while( num < 1959 | num > 2017  ){
+        num <- leNumero(texto)    
     }
+    
     num
 }
 
 leTexto <- function(texto) {
     
-    print(texto)
+    cat(texto)
     lido <- readline()
-    while (  !is.character(texto)) {
-        print(texto)
-        texto <- readline()
-        break
+    while (  !is.character(lido)) {
+        cat(texto)
+        lido <- readline()
     }
-    texto
+    lido
+}
+
+leCaracter <- function(texto, opcaoSim = "y", opcaoNao= "n") {
+    
+    cat(texto)
+    opcao <- readline()
+    while (  !is.character(opcao) | 
+             (nchar(opcao) != 1) | 
+             (opcao != opcaoSim & opcao != opcaoNao ) ) {
+        cat(texto)
+        opcao <- readline()
+    }
+    opcao
 }
