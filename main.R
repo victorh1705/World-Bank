@@ -2,6 +2,7 @@ source("R/file_manager.R")
 source("R/io.R")
 source("R/menu.R")
 source("R/subset.R")
+source("R/cleaning_data.R")
 
 dados <- leDados()
 paises <- lePaises()
