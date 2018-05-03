@@ -1,3 +1,5 @@
+warnings()
+
 read <- function(texto){
     cat(texto)
     lido <- readline()

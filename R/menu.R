@@ -1,16 +1,18 @@
+warnings()
+
 source("R/io.R")
 
 #opcoes = lista a ser printada
 menu <- function(opcoes){
     print(opcoes)
-    valor <- leNumero("Escolha uma opção : ")
+    valor <- leNumero("Escolha uma opcao : ")
     cat("valor: ")
     opcoes[row.names(opcoes)==valor, 1]
 }
 
 menuData <- function(){
     cat("Escolha uma Data - ")
-    textoMenu <- "Escolha um [u]nico ano ou [v]ários anos\n'u' ou 'v' "
+    textoMenu <- "Escolha um [u]nico ano ou [v]arios anos\n'u' ou 'v' "
     
     opcao <- leCaracter(textoMenu, opcaoSim = "u", opcaoNao = "v")
     

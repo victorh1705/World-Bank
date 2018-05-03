@@ -1,23 +1,37 @@
+warnings()
+
 source("R/file_manager.R")
 source("R/io.R")
 source("R/menu.R")
 source("R/subset.R")
+source("R/perguntas.R")
 
 dados <- leDados()
 paises <- lePaises()
 indicadores <- leIndicadores()
 
-#dt_inicio <- grep(2000, names(dados))
-#dt_final <- grep(2017, names(dados))
-#colunas <- c(1:4,dt_inicio:dt_final)
+cat("[1] Pergunta 1\n")
+cat("[2] Pergunta 2\n")
+cat("[3] Pergunta 3\n")
+cat("[4] Pergunta 4\n")
+cat("[5] Pergunta 5\n")
+cat("[6] Informações dos arquivos de dados\n\n")
 
-campos <- grep("x", indicadores$ANALYSIS)
-campos_nomes <- indicadores[campos,1:2]
+cat("Escolha uma [opcao]: ")
+opcao <- readline()
 
-codigo_indicador <- menu(campos_nomes)
-
-dt_analise <- menuData()
-    
-n_cluster <- leNumero("Digite a quantidade de clusteres: ")
-
-## Criar funções de clusterização
+if (opcao == 1) {
+    primeiraPergunta()
+} else if (opcao == 2) {
+    segundaPergunta()
+} else if (opcao == 3) {
+    terceiraPergunta()
+} else if (opcao == 4) {
+    quartaPergunta()
+} else if (opcao == 5) {
+    quintaPergunta()
+} else if (opcao == 6) {
+    descricaoArquivos()
+} else {
+    cat("Pergunta inexistente.")
+}
