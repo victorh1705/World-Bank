@@ -1,29 +1,83 @@
+warnings()
+
 lePaises <- function(){
-    paises <- read.csv("~/Documentos/Programs/R Language/World Bank/data/Metadata_Country_API_Download_DS2_en_csv_v2_9444809.csv", comment.char="#")
+    pathArquivo <- paste(getwd(), "data/Metadata_Country_API_Download_DS2_en_csv_v2_9444809.csv", sep="/" )
+    paises <- read.csv(pathArquivo, comment.char="#")
     paises
 }
 
 leDados <- function(){
-    dados <- read.csv("~/Documentos/Programs/R Language/World Bank/data/API_Download_DS2_en_csv_v2_9444809.csv", comment.char="#", skip = 4)
+    pathArquivo <- paste(getwd(), "data/API_Download_DS2_en_csv_v2_9444809.csv", sep="/" )
+    dados <- read.csv(pathArquivo, comment.char="#", skip = 4)
     dados
 }
 
 leIndicadores <- function(){
-    indicadores <- read.csv("~/Documentos/Programs/R Language/World Bank/data/Metadata_Indicator_API_Download_DS2_en_csv_v2_9444809.csv")
+    pathArquivo <- paste(getwd(), "data/Metadata_Indicator_API_Download_DS2_en_csv_v2_9444809.csv", sep="/" )
+    indicadores <- read.csv(pathArquivo)
+    indicadores
 }
 
-
-# Para saber a estrutura de PAISES
-#str(paises)
-
-# PAISES é um frame?
-#print(is.data.frame(paises))
-
-# número de colunas de PAISES
-#print(ncol(paises))
-
-# número de linhas de PAISES
-#print(nrow(paises))
+descricaoArquivos <- function(){
+    cat("\n######################################################\n")
+    cat("ARQUIVO: data/Metadata_Country_API_Download_DS2_en_csv_v2_9444809.csv")
+    
+    paises <- lePaises()
+    
+    cat("\nTIPO: ")
+    cat(typeof(paises))
+    
+    cat("\nNUMERO DE COLUNAS: ")
+    cat(ncol(paises))
+    
+    cat("\nNUMERO DE LINHAS: ")
+    cat(nrow(paises))
+    
+    cat("\nESTRUTURA: \n")
+    cat(str(paises))
+    
+    cat("\n######################################################\n")
+    
+    
+    cat("\n######################################################\n")
+    cat("ARQUIVO: data/API_Download_DS2_en_csv_v2_9444809.csv")
+    
+    dados <- leDados()
+    
+    cat("\nTIPO: ")
+    cat(typeof(dados))
+    
+    cat("\nNUMERO DE COLUNAS: ")
+    cat(ncol(dados))
+    
+    cat("\nNUMERO DE LINHAS: ")
+    cat(nrow(dados))
+    
+    cat("\nESTRUTURA: \n")
+    cat(str(dados))
+    
+    cat("\n######################################################\n")
+    
+    
+    cat("\n######################################################\n")
+    cat("ARQUIVO: data/Metadata_Indicator_API_Download_DS2_en_csv_v2_9444809.csv")
+    
+    indicadores <- leIndicadores()
+    
+    cat("\nTIPO: ")
+    cat(typeof(indicadores))
+    
+    cat("\nNUMERO DE COLUNAS: ")
+    cat(ncol(indicadores))
+    
+    cat("\nNUMERO DE LINHAS: ")
+    cat(nrow(indicadores))
+    
+    cat("\nESTRUTURA: \n")
+    cat(str(indicadores))
+    
+    cat("\n######################################################\n")
+}
 
 # EXEMPLO: Extract Specific columns.
 #result <- data.frame(paises$"ï..Country.Code")

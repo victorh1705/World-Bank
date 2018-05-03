@@ -1,3 +1,5 @@
+warnings()
+
 n_linha <- nrow(dados)
 first = TRUE
 

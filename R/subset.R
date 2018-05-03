@@ -1,3 +1,5 @@
+warnings()
+
 subsetMean <- function(dados, cols, nameColNum= 1){
     mean <- rowMeans(dados[cols], na.rm = TRUE)
     new_data <- cbind(dados[nameColNum],mean)
