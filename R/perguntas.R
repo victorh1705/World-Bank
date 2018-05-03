@@ -41,11 +41,10 @@ primeiraPergunta <- function() {
 #########################################
 #########################################
 segundaPergunta <- function() {
-    cat("\nNOME PERGUNTA: \nAnalisando os investimentos em educação (SE.XPD.TOTL.GD.ZS)")
+    cat("\nNOME PERGUNTA: \nRelação entre o crescimento anual do PIB e o investimento anual em Pesquisa e Desenvolvimento")
     cat("\nDADOS ANALISADOS: ")
     cat("\nRESULTADO ESPERADO: \n\n")
     
-    print("######################################")
     # PARA VER COMO A BIBLIOTECA FUNCIONA, ACESSAR:
     # https://rdrr.io/github/EL-BID/Agregador-de-indicadores/f/README.md
     
@@ -70,6 +69,12 @@ segundaPergunta <- function() {
     
     # NY.GDP.PCAP.KD.ZG,GDP per capita growth (annual %)
     # NY.GDP.MKTP.KD.ZG,GDP growth (annual %)
+    
+    
+    
+    print("######################################")
+    
+    
     
     data<-ai(indicator = c("SE.XPD.TOTL.GD.ZS"), country = c("BR"), startdate = 2000, enddate=2015)
     print(data[,1:6])
