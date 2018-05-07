@@ -1,4 +1,8 @@
 warnings()
+# source("custom-repos.R")
+# packrat::init()
+# packrat::snapshot()
+# packrat::restore()
 
 source("R/file_manager.R")
 source("R/io.R")
