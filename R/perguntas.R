@@ -3,7 +3,6 @@
 # install_github('EL-BID/Libreria-R-Numeros-para-el-Desarrollo')
 # install_github("arcuellar88/govdata360R")
 # install_github('EL-BID/Agregador-de-indicadores')
-# devtools::install_github('hadley/ggplot2')
 library(devtools)
 library(agregadorindicadores)
 library(plotly)
@@ -40,9 +39,12 @@ primeiraPergunta <- function() {
 #########################################
 #########################################
 segundaPergunta <- function() {
-    cat("\nNOME PERGUNTA: \nRelação entre o crescimento anual do PIB e o investimento anual em Pesquisa e Desenvolvimento")
-    cat("\nDADOS ANALISADOS: ")
-    cat("\nRESULTADO ESPERADO: \n\n")
+    cat("\nNOME PERGUNTA: \nRelacao entre o crescimento anual do PIB e o investimento anual em Pesquisa e Desenvolvimento")
+    cat("\nINDICADORES ANALISADOS: GB.XPD.RSDV.GD.ZS e NY.GDP.MKTP.KD.ZG")
+    cat("\nRESULTADO ESPERADO: Responder se o crescimento do PIB esta diretamente relacionado ao aumento dos investimentos em P&D, ou seja, confirmar se eh de fato um padrao.\n\n")
+    print("######################################")
+    cat("NY.GDP.MKTP.KD.ZG: GDP growth (annual %)\n")
+    cat("GB.XPD.RSDV.GD.ZS: Research and development expenditure (% of GDP)\n")
 
     # PARA VER COMO A BIBLIOTECA FUNCIONA, ACESSAR:
     # https://rdrr.io/github/EL-BID/Agregador-de-indicadores/f/README.md
@@ -75,48 +77,96 @@ segundaPergunta <- function() {
 
 
 
-    data<-ai(indicator = c("SE.XPD.TOTL.GD.ZS"), country = c("BR"), startdate = 2000, enddate=2015)
-    print(data[,1:6])
+    investimentosArray<-ai(indicator = c("GB.XPD.RSDV.GD.ZS"), country = c("BR"), startdate = 1970, enddate=2017)
+    investimentosArray<-investimentosArray[dim(investimentosArray)[1]:1,]
 
+    pibArray<-ai(indicator = c("NY.GDP.MKTP.KD.ZG"), country = c("BR"), startdate = 1970, enddate=2017)
+    pibArray<-pibArray[dim(pibArray)[1]:1,]
+
+    cont <- 1
+    contPibArray <- 1
+    contInvArray <- 1
+    resultados <- list(anoInvestimento=c(),
+                       investimentoNoPrimeiroAno=c(),
+                       investimentoNoSegundoAno=c(),
+                       diferencaInvestimento=c(),
+                       anoPIB=c(),
+                       PIBNoPrimeiroAno=c(),
+                       PIBNoSegundoAno=c(),
+                       diferencaPIB=c(),
+                       padrao=c())
+
+
+    while (contInvArray <= nrow(investimentosArray) || contPibArray <= nrow(pibArray)) {
+        while (is.na(investimentosArray[contInvArray,3])
+               | is.na(investimentosArray[contInvArray + 1,3])
+               | is.na(investimentosArray[contInvArray,5])
+               | is.na(investimentosArray[contInvArray + 1,5])) {
+            contInvArray <- contInvArray + 1
+        }
+
+        while (is.na(pibArray[contPibArray,3])
+               | is.na(pibArray[contPibArray + 1,3])
+               | is.na(pibArray[contPibArray,5])
+               | is.na(pibArray[contPibArray + 1,5])) {
+            contPibArray <- contPibArray + 1
+        }
+
+        anoInvestimento <- investimentosArray[contInvArray,3]
+        anoPIB <- pibArray[contPibArray,3]
+
+        while (anoInvestimento != anoPIB - 1) {
+            if(anoInvestimento < anoPIB) {
+                contInvArray <- contInvArray + 1
+                while (is.na(investimentosArray[contInvArray,3])
+                       | is.na(investimentosArray[contInvArray + 1,3])
+                       | is.na(investimentosArray[contInvArray,5])
+                       | is.na(investimentosArray[contInvArray + 1,5])) {
+                    contInvArray <- contInvArray + 1
+                }
+            } else if(anoInvestimento >= anoPIB){
+                contPibArray <- contPibArray + 1
+                while (is.na(pibArray[contPibArray,3])
+                       | is.na(pibArray[contPibArray + 1,3])
+                       | is.na(pibArray[contPibArray,5])
+                       | is.na(pibArray[contPibArray + 1,5])) {
+                    contPibArray <- contPibArray + 1
+                }
+            }
+            anoInvestimento <- investimentosArray[contInvArray,3]
+            anoPIB <- pibArray[contPibArray,3]
+        }
+
+        resultados$anoInvestimento[cont] <- anoInvestimento
+        resultados$investimentoNoPrimeiroAno[cont] <- investimentosArray$value[contInvArray]
+        resultados$investimentoNoSegundoAno[cont] <- investimentosArray$value[contInvArray + 1]
+        resultados$diferencaInvestimento[cont] <- resultados$investimentoNoSegundoAno[cont] - resultados$investimentoNoPrimeiroAno[cont]
+
+        resultados$anoPIB[cont] <- anoPIB
+        resultados$PIBNoPrimeiroAno[cont] <- pibArray$value[contPibArray]
+        resultados$PIBNoSegundoAno[cont] <- pibArray$value[contPibArray + 1]
+        resultados$diferencaPIB[cont] <- resultados$PIBNoSegundoAno[cont] - resultados$PIBNoPrimeiroAno[cont]
+
+        if (resultados$diferencaInvestimento[cont] > 0 & resultados$diferencaPIB[cont] > 0) {
+            resultados$padrao[cont] <- TRUE
+        } else if (resultados$diferencaInvestimento[cont] < 0 & resultados$diferencaPIB[cont] < 0) {
+            resultados$padrao[cont] <- TRUE
+        } else {
+            resultados$padrao[cont] <- FALSE
+        }
+
+        cont <- cont + 1
+        contInvArray <- contInvArray + 1
+        contPibArray <- contPibArray + 1
+
+        if (contInvArray == nrow(investimentosArray) | contPibArray == nrow(pibArray)) {
+            break
+        }
+    }
+    print(resultados)
 
 
     print("######################################")
-
-
-
-    # EXEMPLO: Extract Specific columns.
-    #result <- data.frame(paises$"ï..Country.Code")
-    #result
-
-    # Analisando os investimentos em educação (SE.XPD.TOTL.GD.ZS)
-    investPorPais <- subset(dados, Indicator.Code == "SE.XPD.TOTL.GD.ZS" & Country.Code=="BRA", DROP=FALSE)
-    print(investPorPais[,56:61])
-
-    crescimentoPIBAnual <- subset(dados, Indicator.Code == "NY.GDP.MKTP.KD.ZG" & Country.Code=="BRA", DROP=FALSE)
-    print(crescimentoPIBAnual[,56:61])
-
-
-
-    print("######################################")
-
-
-
-    # max(investPorPais$x2011,na.rm=TRUE)
-    # retval <- subset(investPorPais, investPorPais$x2011 == max(investPorPais$x2011,na.rm = TRUE ))
-    # print(retval, "\n\n")
-
-
-
-    print("######################################")
-
-
-
-    cat("INDICADORES:\n")
-    cat("\nNY.GDP.MKTP.KD.ZG: GDP growth (annual %)\n\n")
-    cat("\nGB.XPD.RSDV.GD.ZS: Research and development expenditure (% of GDP)")
-
-    df<-ai(indicator = c("NY.GDP.MKTP.KD.ZG","GB.XPD.RSDV.GD.ZS"), country = c("BR"), startdate = 2000)
-
     ay <- list(
         tickfont = list(color = "red"),
         overlaying = "y",
@@ -124,13 +174,80 @@ segundaPergunta <- function() {
         title = "% do PIB"
     )
     p <- plot_ly() %>%
-        add_lines(x = df[df$src_id_ind=="NY.GDP.MKTP.KD.ZG",]$year, y = df[df$src_id_ind=="NY.GDP.MKTP.KD.ZG",]$value, name = "GDP growth (annual %)") %>%
-        add_lines(x = df[df$src_id_ind=="GB.XPD.RSDV.GD.ZS",]$year, y = df[df$src_id_ind=="GB.XPD.RSDV.GD.ZS",]$value, name = "Research and development expenditure (% of GDP)", yaxis = "y2") %>%
+        add_lines(x = resultados$anoInvestimento, y = resultados$investimentoNoPrimeiroAno, name = "Research and development expenditure (% of GDP)") %>%
+        add_lines(x = resultados$anoPIB, y = resultados$PIBNoPrimeiroAno, name = "GDP growth (annual %)") %>%
         layout(
-            title = "Comparacao dos indicadores", yaxis2 = ay,
+            title = "Comparacao dos indicadores",
             xaxis = list(title="Ano")
         )
     print(p)
+
+
+    print("######################################")
+    ay <- list(
+        tickfont = list(color = "red"),
+        overlaying = "y",
+        side = "right",
+        title = "% do PIB"
+    )
+    p <- plot_ly() %>%
+        add_lines(x = resultados$anoInvestimento, y = resultados$investimentoNoPrimeiroAno, name = "Research and development expenditure (% of GDP)") %>%
+        add_lines(x = resultados$anoPIB, y = resultados$PIBNoPrimeiroAno, name = "GDP growth (annual %)", yaxis = "y2") %>%
+        layout(
+            title = "Comparacao dos indicadores",
+            yaxis2 = ay,
+            xaxis = list(title="Ano")
+        )
+    print(p)
+
+
+    print("######################################")
+    ay <- list(
+        tickfont = list(color = "red"),
+        overlaying = "y",
+        side = "right",
+        title = "% do PIB"
+    )
+    p <- plot_ly() %>%
+        add_lines(x = resultados$anoInvestimento, y = resultados$diferencaInvestimento, name = "Diferenca investimento") %>%
+        add_lines(x = resultados$anoPIB, y = resultados$diferencaPIB, name = "Diferenca PIB", yaxis = "y2") %>%
+        layout(
+            title = "Comparacao da variacao dos indicadores",
+            yaxis2 = ay,
+            xaxis = list(title="Ano")
+        )
+    print(p)
+
+
+    print("######################################")
+    p <- plot_ly() %>%
+        add_lines(x = resultados$anoInvestimento, y = resultados$diferencaInvestimento, name = "Diferenca investimento") %>%
+        add_lines(x = resultados$anoPIB, y = resultados$diferencaPIB, name = "Diferenca PIB") %>%
+        layout(
+            title = "Comparacao da variacao dos indicadores",
+            xaxis = list(title="Ano")
+        )
+    print(p)
+
+
+
+    print("######################################")
+    # df<-ai(indicator = c("NY.GDP.MKTP.KD.ZG","GB.XPD.RSDV.GD.ZS"), country = c("BR"), startdate = 2000)
+    #
+    # ay <- list(
+    #     tickfont = list(color = "red"),
+    #     overlaying = "y",
+    #     side = "right",
+    #     title = "% do PIB"
+    # )
+    # p <- plot_ly() %>%
+    #     add_lines(x = df[df$src_id_ind=="NY.GDP.MKTP.KD.ZG",]$year, y = df[df$src_id_ind=="NY.GDP.MKTP.KD.ZG",]$value, name = "GDP growth (annual %)") %>%
+    #     add_lines(x = df[df$src_id_ind=="GB.XPD.RSDV.GD.ZS",]$year, y = df[df$src_id_ind=="GB.XPD.RSDV.GD.ZS",]$value, name = "Research and development expenditure (% of GDP)", yaxis = "y2") %>%
+    #     layout(
+    #         title = "Comparacao dos indicadores", yaxis2 = ay,
+    #         xaxis = list(title="Ano")
+    #     )
+    # print(p)
 }
 
 
