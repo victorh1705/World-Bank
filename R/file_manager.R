@@ -28,6 +28,13 @@ leIndicadores <- function() {
             sep = "/"
         )
     indicadores <- read.csv(pathArquivo)
+
+    # Rename columns
+    indicadores <-  rename(indicadores, Indicator.Code = INDICATOR_CODE)
+    indicadores <-  rename(indicadores, Indicator.Name = INDICATOR_NAME)
+    indicadores <-  rename(indicadores, Source.Note = SOURCE_NOTE)
+    indicadores <-  rename(indicadores, Source.Organization = SOURCE_ORGANIZATION)
+
     indicadores
 }
 
