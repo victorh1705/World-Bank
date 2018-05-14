@@ -6,7 +6,7 @@ warnings()
 # install_github("arcuellar88/govdata360R")
 # install_github('EL-BID/Agregador-de-indicadores')
 library(devtools)
-# library(agregadorindicadores)
+library(agregadorindicadores)
 library(plotly)
 
 

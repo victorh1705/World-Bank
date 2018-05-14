@@ -12,7 +12,7 @@ subset_Sum <- function(dados, cols, nameColNum = 1) {
     new_data
 }
 
-data_frame_per_code <- function(dados, campo_nome, dt_analise) {
+data_frame_per_code <- function(dados, campo_nome, dt_analise = c(1959:2017)) {
     if (is.matrix(dt_analise)) {
         ini_dt <- grep(dt_analise[1], names(dados))
         fin_dt <- grep(dt_analise[length(dt_analise)], names(dados))
