@@ -9,6 +9,8 @@ library(devtools)
 library(agregadorindicadores)
 library(plotly)
 
+source("R/indicadores.R")
+
 
 # PARA VER COMO A BIBLIOTECA FUNCIONA, ACESSAR:
 # https://rdrr.io/github/EL-BID/Agregador-de-indicadores/f/README.md
@@ -56,7 +58,7 @@ primeiraPergunta <- function() {
 
     n_cluster <- leNumero("Digite a quantidade de clusteres: ")
 
-    ## Criar funções de clusterização
+    ## Criar funcoes de clusterizacao
 }
 
 
@@ -81,7 +83,7 @@ segundaPergunta <- function() {
         ai(
             indicator = c("GB.XPD.RSDV.GD.ZS"),
             country = c("BR"),
-            startdate = 1970,
+            startdate = 2000,
             enddate = 2017
         )
     investimentosArray <-
@@ -91,7 +93,7 @@ segundaPergunta <- function() {
         ai(
             indicator = c("NY.GDP.MKTP.KD.ZG"),
             country = c("BR"),
-            startdate = 1970,
+            startdate = 2000,
             enddate = 2017
         )
     pibArray <- pibArray[dim(pibArray)[1]:1, ]
@@ -312,9 +314,10 @@ terceiraPergunta <- function() {
     # cat("\nRESULTADO ESPERADO: ???\n\n")
     # print("######################################")
 
-
-    listaDeDadosBR <- criarListaDeDados()
-    listaDeDadosBR <-
+    print("###############################################")
+    print("Adicionando e tratando os dados dos Indicadores")
+    print("###############################################")
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "NY.GDP.MKTP.KD.ZG",
@@ -322,7 +325,7 @@ terceiraPergunta <- function() {
             "GDP growth (annual %)",
             "Crescrimento do PIB (% anual)"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "GB.XPD.RSDV.GD.ZS",
@@ -330,7 +333,7 @@ terceiraPergunta <- function() {
             "Research and development expenditure (% of GDP)",
             "Gastos com pesquisa e desenvolvimento (% do PIB)"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.TOTL.GD.ZS",
@@ -338,7 +341,7 @@ terceiraPergunta <- function() {
             "Government expenditure on education, total (% of GDP)",
             "Gasto governamental em educacao, Total (% do PIB)"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.TERT.ZS",
@@ -346,7 +349,7 @@ terceiraPergunta <- function() {
             "Expenditure on tertiary as % of government expenditure on education (%)",
             "Gasto em educacao terciaria (superior) como porcentagem do gasto governamental em educacao"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.SECO.ZS",
@@ -354,7 +357,7 @@ terceiraPergunta <- function() {
             "Expenditure on secondary as % of government expenditure on education (%)",
             "Gasto em educacao secundaria como porcentagem do gasto governamental em educacao"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.CTOT.ZS",
@@ -362,7 +365,7 @@ terceiraPergunta <- function() {
             "Current education expenditure, total (% of total expenditure in public institutions)",
             "Porcentagem do total de gastos em instituicoes publicas (TOTAL)"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.CTER.ZS",
@@ -370,7 +373,7 @@ terceiraPergunta <- function() {
             "Current education expenditure, tertiary (% of total expenditure in tertiary public institutions)",
             "Porcentagem do total de gastos em instituicoes publicas (TERCIARIO/SUPERIOR)"
         )
-    listaDeDadosBR <-
+    listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
             "SE.XPD.CSEC.ZS",
@@ -378,6 +381,7 @@ terceiraPergunta <- function() {
             "Current education expenditure, secondary (% of total expenditure in secondary public institutions)",
             "Porcentagem do total de gastos em instituicoes publicas (SECUNDARIO/MEDIO)"
         )
+
 
     # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     # print(listaDeDadosBR$dadosTratados)
@@ -397,6 +401,12 @@ terceiraPergunta <- function() {
     # print(listaDeDadosBR$dadosTratados[[1]]$indicadorNoPrimeiroAno[[1]])
 
 
+    print("###############################################")
+    print("Plotando graficos")
+    print(" > Dados brutos")
+    print(" > Diferenca entre 2 anos consecutivos")
+    print(" > Media entre 2 anos consecutivos")
+    print("###############################################")
     p <- plot_ly() %>%
         add_lines(
             x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
@@ -438,9 +448,194 @@ terceiraPergunta <- function() {
             y = listaDeDadosBR$dadosTratados[[8]]$indicadorNoPrimeiroAno,
             name = listaDeDadosBR$tituloPortugues[[8]]
         ) %>%
-        layout(title = "Comparacao dos indicadores",
+        layout(title = "Comparacao dos indicadores (VALOR BRUTO)",
                xaxis = list(title = "Ano"))
     print(p)
+
+
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[2]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[2]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[2]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[3]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[3]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[3]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[4]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[4]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[4]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[5]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[5]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[5]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[6]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[6]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[6]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[7]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[7]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[7]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[8]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[8]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[8]]
+        ) %>%
+        layout(title = "Comparacao dos indicadores (DIFERENcA ENTRE ANOS CONSECUTIVOS)",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[2]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[2]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[2]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[3]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[3]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[3]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[4]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[4]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[4]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[5]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[5]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[5]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[6]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[6]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[6]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[7]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[7]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[7]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[8]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[8]]$mediaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[8]]
+        ) %>%
+        layout(title = "Comparacao dos indicadores (MÉDIA ENTRE A DIFERENcA DE DOIS ANOS)",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[2]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[2]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[2]]
+        ) %>%
+        layout(title = "Crescimento do PIB x Gastos com pesquisa e desenvolvimento (% do PIB)",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[3]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[3]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[3]]
+        ) %>%
+        layout(title = "Crescimento do PIB x Gasto governamental em educacao, TOTAL",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[4]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[4]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[4]]
+        ) %>%
+        layout(title = "Crescimento do PIB x Gasto em educacao terciaria",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[6]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[6]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[6]]
+        ) %>%
+        layout(title = "Crescimento do PIB x Gastos em educacao em instituicoes públicas (TOTAL)",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+
+
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR$dadosTratados[[7]]$primeiroAno,
+            y = listaDeDadosBR$dadosTratados[[7]]$diferencaIndicador,
+            name = listaDeDadosBR$tituloPortugues[[7]]
+        ) %>%
+        layout(title = "Crescimento do PIB x Gastos em educacao terciaria (superior) em instituicoes públicas",
+               xaxis = list(title = "Ano"))
+    print(p)
+
+
+    print("###############################################")
+    print("Analisando Padroes")
+    print("###############################################")
+
+    listaPadroesDeDadosBR1x1 <<- verificarPadrao1x1(listaDeDadosBR, list(1), list(2,3,4,5,6,7,8), listaPadroesDeDadosBR1x1, 0)
+    listaPadroesDeDadosBR1x1 <<- verificarPadrao1x1(listaDeDadosBR, list(1), list(2,3,4,5,6,7,8), listaPadroesDeDadosBR1x1, 1)
+
+
+
+    # listaPadroesDeDadosBR1xN <<- verificarPadrao1xN(listaDeDadosBR, list(1), list(2,3,4,5,6,7,8), listaPadroesDeDadosBR1xN, 1)
 }
 
 
@@ -449,9 +644,59 @@ terceiraPergunta <- function() {
 #########################################
 #########################################
 quartaPergunta <- function() {
-    cat("NOME PERGUNTA: quartaPergunta")
-    cat("DADOS ANALISADOS: ")
-    cat("RESULTADO ESPERADO: ")
+
+    cat("\nNOME PERGUNTA: \nRelação entre o crescimento de mulheres fumando durante a gravidez com o número de mortes neonatais")
+    cat("\nDADOS ANALISADOS: ")
+    cat("\nRESULTADO ESPERADO: \n\n")
+
+    # PARA VER COMO A BIBLIOTECA FUNCIONA, ACESSAR:
+    # https://rdrr.io/github/EL-BID/Agregador-de-indicadores/f/README.md
+
+    print("######################################")
+
+
+    # Analisando o numero de mulheres fumantes durante a gravidez(SH.PRV.SMOK.FE)
+    fumante<-ai(indicator = c("SH.PRV.SMOK.FE"), country = c("BR"), startdate = 2000, enddate=2015)
+    print(fumante[,1:6])
+
+    # Analisando o numero de mortes neonatais(SH.DYN.NMRT)
+    neonatalDeath<-ai(indicator = c("SH.DYN.NMRT"), country = c("BR"), startdate = 2000, enddate=2015)
+    print(neonatalDeath[,1:6])
+
+
+    prenatal<-ai(indicator = c("SH.STA.ANVC.ZS"), country = c("BR"), startdate = 2000, enddate=2015)
+    print(neonatalDeath[,1:6])
+
+    print("######################################")
+
+
+
+    # EXEMPLO: Extract Specific columns.
+    #result <- data.frame(paises$"ï..Country.Code")
+    #result
+
+    # max(investPorPais$x2011,na.rm=TRUE)
+    # retval <- subset(investPorPais, investPorPais$x2011 == max(investPorPais$x2011,na.rm = TRUE ))
+    # print(retval, "\n\n")
+
+    df<-ai(indicator = c("SH.PRV.SMOK.FE","SH.DYN.NMRT", "SH.STA.ANVC.ZS"), country = c("BR"), startdate = 2000)
+
+    ay <- list(
+        tickfont = list(color = "red"),
+        overlaying = "y",
+        side = "right",
+        title = "% de mulheres que fumam durante gravidez"
+    )
+    p <- plot_ly() %>%
+        add_lines(x = df[df$src_id_ind=="SH.PRV.SMOK.FE",]$year, y = df[df$src_id_ind=="SH.PRV.SMOK.FE",]$value, name = "Mulheres que fumam durante gravidez") %>%
+        add_lines(x = df[df$src_id_ind=="SH.DYN.NMRT",]$year, y = df[df$src_id_ind=="SH.DYN.NMRT",]$value, name = "% de mortes neonatais (a cada 1.000)", yaxis = "y2") %>%
+        add_lines(x = df[df$src_id_ind=="SH.STA.ANVC.ZS",]$year, y = df[df$src_id_ind=="SH.STA.ANVC.ZS",]$value, name = "% de mulheres que receberam cuidado prenatal", yaxis = "y2") %>%
+
+        layout(
+            title = "Comparacao dos indicadores", yaxis2 = ay,
+            xaxis = list(title="Ano")
+        )
+    print(p)
 }
 
 
