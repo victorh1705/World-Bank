@@ -5,9 +5,12 @@ warnings()
 # install_github('EL-BID/Libreria-R-Numeros-para-el-Desarrollo')
 # install_github("arcuellar88/govdata360R")
 # install_github('EL-BID/Agregador-de-indicadores')
+library(iadbstats)
 library(devtools)
 library(agregadorindicadores)
+library(ggplot2)
 library(plotly)
+library(RSQLite)
 
 source("R/indicadores.R")
 
@@ -333,6 +336,7 @@ terceiraPergunta <- function() {
             "Research and development expenditure (% of GDP)",
             "Gastos com pesquisa e desenvolvimento (% do PIB)"
         )
+    print("!!!!!!!!!")
     listaDeDadosBR <<-
         adicionarIndicador(
             listaDeDadosBR,
@@ -708,4 +712,39 @@ quintaPergunta <- function() {
     cat("NOME PERGUNTA: quintaPergunta")
     cat("DADOS ANALISADOS: ")
     cat("RESULTADO ESPERADO: ")
+
+    listaDeDadosBR2 <<-
+        adicionarIndicador(
+            listaDeDadosBR2,
+            "NY.GDP.MKTP.KD.ZG",
+            "BR",
+            "GDP growth (annual %)",
+            "Crescrimento do PIB (% anual)"
+        )
+    listaDeDadosBR2 <<-
+        adicionarIndicador(
+            listaDeDadosBR2,
+            "NV.IND.TOTL.ZS",
+            "BR",
+            "% Crescimento indrustria (% of GDP)",
+            "Crescimento indrustria (% of GDP)"
+        )
+    p <- plot_ly() %>%
+        add_lines(
+            x = listaDeDadosBR2$dadosTratados[[1]]$primeiroAno,
+            y = listaDeDadosBR2$dadosTratados[[1]]$diferencaIndicador,
+            name = listaDeDadosBR2$tituloPortugues[[1]]
+        ) %>%
+        add_lines(
+            x = listaDeDadosBR2$dadosTratados[[2]]$primeiroAno,
+            y = listaDeDadosBR2$dadosTratados[[2]]$diferencaIndicador,
+            name = listaDeDadosBR2$tituloPortugues[[2]]
+        ) %>%
+        layout(title = "Comparacao entre Crescimento do PIB e Crescimento Industria",
+               xaxis = list(title = "Ano"))
+
+    print(p);
+
+
+    #listaPadroesDeDadosBR1x1 <<- verificarPadrao1x1(listaDeDadosBR2, list(1), list(2,3,4,5,6,7,8), listaPadroesDeDadosBR1x1, 1)
 }

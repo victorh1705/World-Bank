@@ -39,6 +39,7 @@ adicionarIndicador <-
                 startdate = 2000,
                 enddate = 2017
             )
+
         dadosBrutos <- dadosBrutos[dim(dadosBrutos)[1]:1,]
         dadosBrutos <- dadosBrutos[, 3:5]
 
@@ -46,6 +47,7 @@ adicionarIndicador <-
         listaDeDados$dadosBrutos[[contListaDeDados]] <- dadosBrutos
         listaDeDados$dadosTratados[[contListaDeDados]] <-
             processarDados(dadosBrutos)
+
         listaDeDados$tituloIngles[[contListaDeDados]] <-
             tituloIngles
         listaDeDados$tituloPortugues[[contListaDeDados]] <-
@@ -63,6 +65,7 @@ adicionarIndicador <-
         # print("listaDeDados$dadosTratados[contListaDeDados]")
         # # print(listaDeDados$dadosTratados)
         # print(listaDeDados$dadosTratados[[contListaDeDados]])
+
 
         contListaDeDados <- contListaDeDados + 1
         listaDeDados
